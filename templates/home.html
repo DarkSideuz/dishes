@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+    <h1 class="text-center">Welcome to Taomxona</h1>
+    <p class="text-center">Enjoy our delicious dishes and explore various categories.</p>
+    <div class="text-center mt-4">
+        <a href="{% url 'all_dishes' %}" class="btn btn-primary">View All Dishes</a>
+        <a href="{% url 'register' %}" class="btn btn-success">Register</a>
+        <a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
+        <a href="{% url 'add_category' %}" class="btn btn-info">Add Category</a>
+        <a href="{% url 'add_dish' %}" class="btn btn-warning">Add Dish</a>
+    </div>
+</div>
+{% endblock %} 

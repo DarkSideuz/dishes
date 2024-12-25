@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+
+{% block title %}All Dishes{% endblock %}
+
+{% block content %}
+<h1>All Dishes</h1>
+<table class="table table-bordered">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Price</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for dish in dishes %}
+        <tr>
+            <td><a href="/dishes/{{ dish.id }}/">{{ dish.name }}</a></td>
+            <td>${{ dish.price }}</td>
+            <td>
+                <a href="/dishes/{{ dish.id }}/edit/" class="btn btn-sm btn-primary">Edit</a>
+                <a href="/dishes/{{ dish.id }}/delete/" class="btn btn-sm btn-danger">Delete</a>
+            </td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

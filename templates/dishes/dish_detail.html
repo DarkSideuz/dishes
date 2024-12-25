@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ dish.name }}{% endblock %}
+
+{% block content %}
+<h1>{{ dish.name }}</h1>
+<p><strong>Description:</strong> {{ dish.description }}</p>
+<p><strong>Price:</strong> ${{ dish.price }}</p>
+<p><strong>Category:</strong> {{ dish.category.name }}</p>
+<a href="/dishes/" class="btn btn-secondary">Back to Dishes</a>
+{% endblock %}
