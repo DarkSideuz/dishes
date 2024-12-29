@@ -1,17 +1,40 @@
 {% extends 'base.html' %}
 
-{% block title %}Home{% endblock %}
+{% block title %}Welcome to Taomxona{% endblock %}
 
 {% block content %}
+<div class="jumbotron text-center bg-light p-5 rounded">
+    <h1 class="display-4">Welcome to Taomxona!</h1>
+    <p class="lead">Discover delicious dishes and enjoy a great dining experience.</p>
+    <hr class="my-4">
+    <p>Explore our menu and find your favorite dishes.</p>
+    <a class="btn btn-primary btn-lg" href="{% url 'all_dishes' %}" role="button">View Menu</a>
+</div>
+
 <div class="container mt-5">
-    <h1 class="text-center">Welcome to Taomxona</h1>
-    <p class="text-center">Enjoy our delicious dishes and explore various categories.</p>
-    <div class="text-center mt-4">
-        <a href="{% url 'all_dishes' %}" class="btn btn-primary">View All Dishes</a>
-        <a href="{% url 'register' %}" class="btn btn-success">Register</a>
-        <a href="{% url 'login' %}" class="btn btn-secondary">Login</a>
-        <a href="{% url 'add_category' %}" class="btn btn-info">Add Category</a>
-        <a href="{% url 'add_dish' %}" class="btn btn-warning">Add Dish</a>
+    <h2 class="text-center mb-4">Most Viewed Dishes</h2>
+    <div class="row">
+        {% for dish in top_dishes %}
+        <div class="col-md-4">
+            <div class="card mb-4 shadow-sm">
+                <img src="https://via.placeholder.com/300" class="card-img-top" alt="Dish Image">
+                <div class="card-body">
+                    <h5 class="card-title">{{ dish.name }}</h5>
+                    <p class="card-text">{{ dish.description|truncatewords:20 }}</p>
+                    <a href="{% url 'dish_detail' dish.id %}" class="btn btn-outline-primary">Learn More</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
     </div>
 </div>
+
+{% if messages %}
+    <div class="alert alert-dismissible fade show" role="alert">
+        {% for message in messages %}
+            <div class="alert alert-danger">{{ message }}</div>
+        {% endfor %}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endif %}
 {% endblock %} 

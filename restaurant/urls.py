@@ -1,18 +1,35 @@
-from django.urls import path
-from django.contrib.auth.views import LoginView
-from .views import all_dishes, dish_detail, category_dishes, add_category, add_dish, edit_category, edit_dish, delete_category, delete_dish, register, home
+from django.urls import path, include
+from .views import (
+    home,
+    all_dishes,
+    dish_detail,
+    register,
+    login,
+    logout,
+    add_dish,
+    edit_dish,
+    delete_dish,
+    category_dishes,
+    add_category,
+    profile,
+    search,
+    add_comment,
+)
 
 urlpatterns = [
     path('', home, name='home'),
     path('dishes/', all_dishes, name='all_dishes'),
     path('dishes/<int:dish_id>/', dish_detail, name='dish_detail'),
-    path('categories/<int:category_id>/dishes/', category_dishes, name='category_dishes'),
-    path('categories/add/', add_category, name='add_category'),
     path('dishes/add/', add_dish, name='add_dish'),
-    path('categories/<int:category_id>/edit/', edit_category, name='edit_category'),
     path('dishes/<int:dish_id>/edit/', edit_dish, name='edit_dish'),
-    path('categories/<int:category_id>/delete/', delete_category, name='delete_category'),
-    path('dishes/<int:dish_id>/delete/', delete_dish, name='delete_dish'),
-    path('register/', register, name='register'),
-    path('login/', LoginView.as_view(redirect_authenticated_user=True, template_name='registration/login.html'), name='login'),
+    path('dishes/<int:dish_id>/delete/', delete_dish, name='delete_dish'),  
+    path('categories/<int:category_id>/', category_dishes, name='category_dishes'),  
+    path('register/', register, name='register'),  
+    path('login/', login, name='login'),  
+    path('logout/', logout, name='logout'),  
+    path('categories/add/', add_category, name='add_category'),  
+    path('accounts/', include('django.contrib.auth.urls')), 
+    path('profile/', profile, name='profile'),
+    path('search/', search, name='search'),
+    path('dishes/<int:dish_id>/comment/', add_comment, name='add_comment'),
 ]
