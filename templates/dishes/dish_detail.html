@@ -8,24 +8,26 @@
 <p><strong>Price:</strong> ${{ dish.price }}</p>
 <p><strong>Category:</strong> {{ dish.category.name }}</p>
 
-<h2>Comments</h2>
-<ul>
-    {% for comment in dish.comments.all %}
-    <li>{{ comment.user.username }}: {{ comment.text }} ({{ comment.created_at }})</li>
-    {% empty %}
-    <li>No comments yet.</li>
-    {% endfor %}
-</ul>
-
+<!-- Add Comment Form -->
+<h2>Add a Comment</h2>
 {% if user.is_authenticated %}
 <form method="post" action="{% url 'add_comment' dish.id %}">
     {% csrf_token %}
-    <textarea name="text" required class="form-control"></textarea>
+    <textarea name="text" required class="form-control" placeholder="Write your comment here..."></textarea>
     <button type="submit" class="btn btn-primary mt-2">Add Comment</button>
 </form>
 {% else %}
 <p>You must be logged in to add a comment.</p>
 {% endif %}
+
+<h2>Comments</h2>
+<ul>
+    {% for comment in dish.comment_set.all %}  <!-- Use comment_set to access related comments -->
+    <li>{{ comment.user.username }}: {{ comment.text }} ({{ comment.created_at }})</li>
+    {% empty %}
+    <li>No comments yet.</li>
+    {% endfor %}
+</ul>
 
 <a href="/dishes/" class="btn btn-secondary">Back to Dishes</a>
 {% endblock %}

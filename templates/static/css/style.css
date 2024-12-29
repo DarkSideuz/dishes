@@ -1,0 +1,38 @@
+/* templates/static/css/style.css */
+
+/* General body styles */
+body {
+    background-color: #f8f9fa; /* Light background color */
+    font-family: Arial, sans-serif; /* Font family */
+}
+
+/* Navbar styles */
+.navbar {
+    margin-bottom: 20px; /* Space below the navbar */
+}
+
+/* Alert styles */
+.alert {
+    margin-top: 20px; /* Space above alerts */
+}
+
+/* Card styles for dishes */
+.card {
+    transition: transform 0.2s; /* Smooth transition for hover effect */
+}
+
+.card:hover {
+    transform: scale(1.05); /* Scale up on hover */
+}
+
+/* Button styles */
+.btn {
+    border-radius: 5px; /* Rounded corners for buttons */
+}
+
+/* Responsive styles */
+@media (max-width: 768px) {
+    .navbar {
+        text-align: center; /* Center text on smaller screens */
+    }
+}
