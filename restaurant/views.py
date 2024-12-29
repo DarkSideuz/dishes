@@ -3,7 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 
 from django.shortcuts import render, get_object_or_404, redirect
-from.models import Dish, Category
+from.models import Dish, Category, Comment
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth import login as auth_login
 
@@ -13,7 +13,15 @@ def all_dishes(request):
 
 def dish_detail(request, dish_id):
     dish = get_object_or_404(Dish, id=dish_id)
-    return render(request, 'dishes/dish_detail.html', {'dish': dish})
+    comments = dish.comments.all()
+
+    if request.method == 'POST':
+        comment_text = request.POST.get('comment')
+        if comment_text:
+            Comment.objects.create(dish=dish, text=comment_text)
+            return redirect('dish_detail', dish_id=dish.id)
+
+    return render(request, 'dishes/dish_detail.html', {'dish': dish, 'comments': comments})
 
 def category_dishes(request, category_id):
     category = get_object_or_404(Category, id=category_id)
