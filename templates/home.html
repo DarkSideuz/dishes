@@ -3,6 +3,7 @@
 {% block title %}Welcome to Taomxona{% endblock %}
 
 {% block content %}
+
 <div class="jumbotron text-center bg-light p-5 rounded">
     <h1 class="display-4">Welcome to Taomxona!</h1>
     <p class="lead">Discover delicious dishes and enjoy a great dining experience.</p>
@@ -28,6 +29,20 @@
         {% endfor %}
     </div>
 </div>
+
+<form method="get" action="{% url 'home' %}">
+    {{ form.as_p }}
+    <button type="submit">Qidirish</button>
+</form>
+
+{% if results %}
+    <h2>Natijalar:</h2>
+    <ul>
+        {% for dish in results %}
+            <li>{{ dish.name }}</li>  
+        {% endfor %}
+    </ul>
+{% endif %}
 
 {% if messages %}
     <div class="alert alert-dismissible fade show" role="alert">

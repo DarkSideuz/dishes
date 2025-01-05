@@ -1,4 +1,5 @@
 from pathlib import Path
+import os
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -76,8 +77,7 @@ USE_TZ = True
 STATIC_URL = 'static/'
 STATICFILES_DIRS = [BASE_DIR / 'templates/static']
 
-# Remove the custom user model setting
-# AUTH_USER_MODEL = 'restaurant.CustomUser'  # Comment out or remove this line
+AUTH_USER_MODEL = 'restaurant.CustomUser'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 

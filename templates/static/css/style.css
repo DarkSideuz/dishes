@@ -36,3 +36,18 @@ body {
         text-align: center; /* Center text on smaller screens */
     }
 }
+
+nav {
+    background-color: #f8f9fa;
+    padding: 10px;
+    border-bottom: 1px solid #dee2e6;
+}
+
+nav h1 {
+    display: inline;
+}
+
+nav form {
+    display: inline;
+    float: right;
+} 

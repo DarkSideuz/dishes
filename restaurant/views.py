@@ -3,11 +3,19 @@ from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Dish, Category, Comment
-from .forms import UserRegistrationForm, DishForm, CategoryForm
+from .forms import UserRegistrationForm, DishForm, CategoryForm, SearchForm
 
 def home(request):
-    top_dishes = Dish.objects.order_by('-views')[:3]  # Get top 3 most viewed dishes
-    return render(request, 'home.html', {'top_dishes': top_dishes})
+    form = SearchForm()
+    results = []
+    
+    if request.method == 'GET' and 'query' in request.GET:
+        form = SearchForm(request.GET)
+        if form.is_valid():
+            query = form.cleaned_data['query']
+            results = Dish.objects.filter(name__icontains=query)  
+
+    return render(request, 'home.html', {'form': form, 'results': results})
 
 def all_dishes(request):
     dishes = Dish.objects.all()
