@@ -3,7 +3,8 @@ from django.contrib.auth import login as auth_login, logout as auth_logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from .models import Dish, Category, Comment
-from .forms import UserRegistrationForm, DishForm, CategoryForm, SearchForm
+from .forms import UserRegistrationForm, DishForm, CategoryForm, SearchForm, LoginForm
+from django.contrib.auth import views as auth_views
 
 def home(request):
     form = SearchForm()
@@ -107,3 +108,13 @@ def add_category(request):
     else:
         form = CategoryForm()
     return render(request, 'categories/add_category.html', {'form': form})
+
+def login(request):
+    if request.method == 'POST':
+        form = LoginForm(request, data=request.POST)
+        if form.is_valid():
+            auth_login(request, form.get_user())
+            return redirect('home')
+    else:
+        form = LoginForm()
+    return render(request, 'registration/login.html', {'form': form})
