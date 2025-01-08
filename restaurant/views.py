@@ -5,18 +5,79 @@ from django.contrib.auth.models import User
 from .models import Dish, Category, Comment
 from .forms import UserRegistrationForm, DishForm, CategoryForm, SearchForm, LoginForm
 from django.contrib.auth import views as auth_views
+from django.views.generic import ListView, DetailView, CreateView, UpdateView, DeleteView
+from django.urls import reverse_lazy
+from django.views import View
 
-def home(request):
-    form = SearchForm()
-    results = []
-    
-    if request.method == 'GET' and 'query' in request.GET:
-        form = SearchForm(request.GET)
+class DishListView(ListView):
+    model = Dish
+    template_name = 'dishes/all_dishes.html'
+    context_object_name = 'dishes'
+
+class DishDetailView(DetailView):
+    model = Dish
+    template_name = 'dishes/dish_detail.html'
+    context_object_name = 'dish'
+
+class HomeView(View):
+    def get(self, request):
+        form = SearchForm()
+        results = []
+        
+        if 'query' in request.GET:
+            form = SearchForm(request.GET)
+            if form.is_valid():
+                query = form.cleaned_data['query']
+                results = Dish.objects.filter(name__icontains=query)
+
+        return render(request, 'home.html', {'form': form, 'results': results})
+
+class RegisterView(View):
+    def get(self, request):
+        form = UserRegistrationForm()
+        return render(request, 'registration/register.html', {'form': form})
+
+    def post(self, request):
+        form = UserRegistrationForm(request.POST)
         if form.is_valid():
-            query = form.cleaned_data['query']
-            results = Dish.objects.filter(name__icontains=query)  
+            user = form.save()
+            auth_login(request, user)
+            return redirect('home')
+        return render(request, 'registration/register.html', {'form': form})
 
-    return render(request, 'home.html', {'form': form, 'results': results})
+class LogoutView(View):
+    def get(self, request):
+        auth_logout(request)
+        return redirect('home')
+
+class ProfileView(View):
+    def get(self, request):
+        return render(request, 'registration/profile.html')
+
+class SearchView(View):
+    def get(self, request):
+        query = request.GET.get('q')
+        dishes = Dish.objects.filter(name__icontains=query)
+        return render(request, 'dishes/search_results.html', {'dishes': dishes})
+
+class AddCommentView(View):
+    def post(self, request, dish_id):
+        dish = get_object_or_404(Dish, id=dish_id)
+        text = request.POST.get('text')
+        Comment.objects.create(user=request.user, dish=dish, text=text)
+        return redirect('dish_detail', dish_id=dish.id)
+
+class AddCategoryView(View):
+    def get(self, request):
+        form = CategoryForm()
+        return render(request, 'categories/add_category.html', {'form': form})
+
+    def post(self, request):
+        form = CategoryForm(request.POST)
+        if form.is_valid():
+            form.save()
+            return redirect('all_dishes')
+        return render(request, 'categories/add_category.html', {'form': form})
 
 def all_dishes(request):
     dishes = Dish.objects.all()
@@ -64,51 +125,6 @@ def category_dishes(request, category_id):
     dishes = Dish.objects.filter(category=category)
     return render(request, 'dishes/category_dishes.html', {'category': category, 'dishes': dishes})
 
-def register(request):
-    if request.method == 'POST':
-        form = UserRegistrationForm(request.POST)
-        if form.is_valid():
-            user = form.save()
-            auth_login(request, user)
-            return redirect('home')
-    else:
-        form = UserRegistrationForm()
-    return render(request, 'registration/register.html', {'form': form})
-
-@login_required
-def logout(request):
-    auth_logout(request)
-    return redirect('home')
-
-@login_required
-def profile(request):
-    return render(request, 'profile.html')
-
-def search(request):
-    query = request.GET.get('q')
-    dishes = Dish.objects.filter(name__icontains=query)
-    return render(request, 'dishes/search_results.html', {'dishes': dishes})
-
-@login_required
-def add_comment(request, dish_id):
-    dish = get_object_or_404(Dish, id=dish_id)
-    if request.method == 'POST':
-        text = request.POST.get('text')
-        Comment.objects.create(user=request.user, dish=dish, text=text)
-        return redirect('dish_detail', dish_id=dish.id)
-    return render(request, 'dishes/dish_detail.html', {'dish': dish})
-
-@login_required
-def add_category(request):
-    if request.method == 'POST':
-        form = CategoryForm(request.POST)
-        if form.is_valid():
-            form.save()
-            return redirect('all_dishes')
-    else:
-        form = CategoryForm()
-    return render(request, 'categories/add_category.html', {'form': form})
-
 def login(request):
     if request.method == 'POST':
         form = LoginForm(request, data=request.POST)
@@ -118,3 +134,20 @@ def login(request):
     else:
         form = LoginForm()
     return render(request, 'registration/login.html', {'form': form})
+
+class DishCreateView(CreateView):
+    model = Dish
+    form_class = DishForm
+    template_name = 'dishes/add_dish.html'
+    success_url = reverse_lazy('all_dishes')
+
+class DishUpdateView(UpdateView):
+    model = Dish
+    form_class = DishForm
+    template_name = 'dishes/edit_dish.html'
+    success_url = reverse_lazy('all_dishes')
+
+class DishDeleteView(DeleteView):
+    model = Dish
+    template_name = 'dishes/delete_dish.html'
+    success_url = reverse_lazy('all_dishes')
