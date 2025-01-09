@@ -39,6 +39,25 @@
         {% endfor %}
     </tbody>
 </table>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if dishes.has_previous %}
+            <a href="?page=1">&laquo; First</a>
+            <a href="?page={{ dishes.previous_page_number }}">Previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ dishes.number }} of {{ dishes.paginator.num_pages }}.
+        </span>
+
+        {% if dishes.has_next %}
+            <a href="?page={{ dishes.next_page_number }}">Next</a>
+            <a href="?page={{ dishes.paginator.num_pages }}">Last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
+
 {% if perms.restaurant.add_dish %}
 <a href="{% url 'add_dish' %}" class="btn btn-success">Add New Dish</a>
 {% endif %}

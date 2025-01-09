@@ -1,0 +1,12 @@
+body {
+    background-color: #4CAF50 !important;  /* Yashil rang, !important qo'shildi */
+}
+
+/* Admin panelidagi boshqa elementlar uchun ranglarni o'zgartirish */
+#header {
+    background-color: #388E3C !important;  /* Yashil rangning to'g'ri tonini tanlang */
+}
+
+#content {
+    background-color: #ffffff;  /* Kontent rangini o'zgartirish */
+}

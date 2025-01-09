@@ -13,11 +13,18 @@ class DishListView(ListView):
     model = Dish
     template_name = 'dishes/all_dishes.html'
     context_object_name = 'dishes'
+    paginate_by = 10
+
+    def get_queryset(self):
+        return Dish.objects.select_related('category').all()
 
 class DishDetailView(DetailView):
     model = Dish
     template_name = 'dishes/dish_detail.html'
     context_object_name = 'dish'
+
+    def get_queryset(self):
+        return Dish.objects.select_related('category').all()
 
 class HomeView(View):
     def get(self, request):
